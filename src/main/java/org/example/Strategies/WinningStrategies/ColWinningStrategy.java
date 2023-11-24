@@ -7,16 +7,16 @@ import org.example.Models.Symbol;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ColWinningStrategy implements PlayerWinningStrategy{
+public class ColWinningStrategy implements WinningStrategy {
     private Map<Integer, Map<Symbol,Integer>> colMaps = new HashMap<>();
     @Override
     public boolean checkWinner(Move move, Board board) {
-        Symbol symbol = move.getPlayer().getSymbol();
         int col = move.getCell().getCol();
-        if (!colMaps.containsKey((col))) {
+        Symbol symbol = move.getPlayer().getSymbol();
+        if (!colMaps.containsKey(col)) {
             colMaps.put(col, new HashMap<>());
         }
-        Map<Symbol, Integer> curr_Col = colMaps.get(col);
+        Map<Symbol,Integer> curr_Col = colMaps.get(col);
         if (curr_Col.containsKey(symbol)) {
             curr_Col.put(symbol, curr_Col.get(symbol) + 1);
         } else {

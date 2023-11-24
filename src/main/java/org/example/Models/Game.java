@@ -1,8 +1,10 @@
 package org.example.Models;
 import org.example.exceptions.GameInvalidationException;
+import org.example.Strategies.WinningStrategies.WinningStrategy;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.example.Strategies.WinningStrategies.PlayerWinningStrategy;
+
 
 public class Game {
     private Board board;
@@ -11,14 +13,19 @@ public class Game {
     private Player winner;
     private int nextMovePlayerIndex;
     private List<Move> moves;
-    private List<PlayerWinningStrategy> playerWinningStrategy;
+    private final List<WinningStrategy> winningStrategy;
     public static Builder getBuilder(){
         return new Builder();
     }
     public static class Builder{
         private int size;
         private List<Player> players;
-        private List<PlayerWinningStrategy> playerWinningStrategies;
+        private List<WinningStrategy> winningStrategies;
+//        private Builder(){
+//            this.players = new ArrayList<>();
+//            this.winningStrategies = new ArrayList<>();
+//            this.size = 0;
+//        }
         public Builder setSize(int size){
             this.size = size;
             return this;
@@ -27,32 +34,32 @@ public class Game {
             this.players = players;
             return this;
         }
-        public Builder setPlayerWinningStrategy(List<PlayerWinningStrategy> playerWinningStrategies){
-            this.playerWinningStrategies = playerWinningStrategies;
+        public Builder setPlayerWinningStrategy(List<WinningStrategy> winningStrategies){
+            this.winningStrategies = winningStrategies;
             return this;
         }
         public boolean Validate(){
-            for(int i = 0;i<size;i++){
-                if(players.get(i).getSymbol() == players.get(i+1).getSymbol()){
-                    return false;
-                }
-            }
+//            for(int i = 0;i<size;i++){
+//                if(players.get(i).getSymbol() == players.get(i+1).getSymbol()){
+//                    return false;
+//                }
+//            }
             return true;
         }
         public Game build() throws Exception{
             // Validation
-            if(Validate()){
-                return new Game(size,players,playerWinningStrategies);
+            if(!Validate()){
+                throw new GameInvalidationException("Invalid Game");
             }
-            throw new GameInvalidationException("Invalid Game");
+            return new Game(size,players, winningStrategies);
         }
     }
-    private Game (int size,List<Player> players,List<PlayerWinningStrategy> playerWinningStrategies){
+    private Game (int size,List<Player> players,List<WinningStrategy> winningStrategies){
         this.board = new Board(size);
         this.gameStatus = GameStatus.IN_Progress;
         this.nextMovePlayerIndex = 0;
         this.moves = new ArrayList<>();
-        this.playerWinningStrategy = playerWinningStrategies;
+        this.winningStrategy = winningStrategies;
         this.player = players;
     }
 
@@ -109,19 +116,16 @@ public class Game {
     public void undo(){
 
     }
-    public boolean validMove(Move move){
+    public boolean validateMove(Move move){
         int row = move.getCell().getRow();
         int col = move.getCell().getCol();
-        if (row >= 0 && row < board.getSize() && col >=0  && col < board.getSize() &&
-                board.getBoard().get(row).get(col).getCellStatus().equals(CellStatus.EMPTY)){
-            return true;
-        }
-        return false;
+        return row >= 0 && row < board.getSize() && col >= 0 && col < board.getSize() &&
+                board.getBoard().get(row).get(col).getCellStatus().equals(CellStatus.EMPTY);
 
     }
-    public boolean checkWinner(Move move,Board board){
-        for(PlayerWinningStrategy playerWinningStrategy1 : playerWinningStrategy){
-            if(playerWinningStrategy1.checkWinner(move,board)){
+    public boolean checkWinner(Board board,Move move){
+        for(WinningStrategy winningStrategy1 : winningStrategy){
+            if(winningStrategy1.checkWinner(move, board)){
                 return true;
             }
         }
@@ -129,6 +133,32 @@ public class Game {
     }
     public void makeMove(){
         // Current player to make a move.
+        Player curr_Player = player.get(nextMovePlayerIndex);
+        System.out.println("It's "+curr_Player.getName()+"'s move!");
+        Move move = curr_Player.makeMove(this.board);
+        System.out.println(curr_Player.getName()+" has made a move at this Row : "+move.getCell().getRow()+" and the col : "+move.getCell().getCol() +".");
+        //Check the Validation to move on the Board.
+        if(!validateMove(move)) {
+            System.out.println("It's a Invalid move by a Player : " + curr_Player.getName() + " please select any other Valid Move");
+            return;
+        }
+        int row = move.getCell().getRow();
+        int col = move.getCell().getCol();
+        Cell final_Cell_Move = board.getBoard().get(row).get(col);
+        final_Cell_Move.setCellStatus(CellStatus.FILLED);
+        final_Cell_Move.setPlayer(curr_Player);
+        Move final_Move = new Move(final_Cell_Move,curr_Player);
+        moves.add(final_Move);
+        nextMovePlayerIndex += 1;
+        nextMovePlayerIndex %=player.size();
+        //Once a player has made a move , Check the winner.
+        if(checkWinner(board,final_Move)){
+            gameStatus = GameStatus.Ended;
+            winner = curr_Player;
+        }else if (moves.size() == board.getSize()*board.getSize()){
+            // Game has Draw
+            gameStatus = GameStatus.Draw;
+        }
 
     }
 

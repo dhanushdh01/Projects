@@ -6,31 +6,30 @@ import java.util.List;
 public class Board {
     private int size;
     private List<List<Cell>> board;
-    public Board(int size){
-        //Initialize a board of size
-        this.board = new ArrayList<>(); // New Row Size of size
-        this.size = size;
-        for(int i = 0; i < size; i++) {
-            board.add(new ArrayList<>()); // New Cols Size of size
-            for(int j = 0; j < size; j++) {
-                board.get(i).add(new Cell(i,j));
+    public Board(int n) {
+        //Initialize a board of n
+        this.size = n;
+        this.board = new ArrayList<>(); // New Row Size of n
+        for (int row = 0; row < n; row++) {
+            board.add(new ArrayList<>()); // New Cols Size of n
+            for (int col = 0; col < n; col++) {
+                board.get(row).add(new Cell(row, col));
             }
         }
+    }
         public void displayBoard(){
-            for(int i = 0; i < size; i++) {
-                for(int j = 0; j < size; j++) {
-                    Cell cell = board.get(i).get(j);
+            for(int row = 0; row < size; row++) {
+                for(int col = 0; col < size; col++) {
+                    Cell cell = board.get(row).get(col);
                     if(cell.getCellStatus().equals(CellStatus.EMPTY)){
                         System.out.print("|  |");
                     }else{
-                        System.out.print("|" + cell.getPlayer().getSymbol() + "|");
+                        System.out.print("|" + cell.getPlayer().getSymbol().getSymbol() + "|");
                     }
                 }
+                System.out.println();
             }
         }
-
-    }
-
     public int getSize() {
         return size;
     }
@@ -47,5 +46,6 @@ public class Board {
         this.board = board;
     }
 
+    }
 
-}
+

@@ -7,9 +7,9 @@ import org.example.Models.Symbol;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DiagonalWinningStrategy implements PlayerWinningStrategy{
-    Map<Symbol,Integer> right_left_DiagonalMap = new HashMap<>();
-    Map<Symbol,Integer> left_right_DiagonalMap = new HashMap<>();
+public class DiagonalWinningStrategy implements WinningStrategy {
+    private Map<Symbol,Integer> right_left_DiagonalMap = new HashMap<>();
+    private Map<Symbol,Integer> left_right_DiagonalMap = new HashMap<>();
     @Override
     public boolean checkWinner(Move move, Board board){
         int row = move.getCell().getRow();

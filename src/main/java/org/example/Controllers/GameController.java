@@ -1,17 +1,18 @@
 package org.example.Controllers;
+
 import org.example.Models.GameStatus;
 import org.example.Models.Player;
 import org.example.Models.Game;
-import org.example.Strategies.WinningStrategies.PlayerWinningStrategy;
+import org.example.Strategies.WinningStrategies.WinningStrategy;
 
 import java.util.List;
 
 public class GameController {
-    public Game startGame(List<Player> players, int boardSize, List<PlayerWinningStrategy> playerWinningStrategy) throws Exception{
+    public Game startGame(int boardSize,List<Player> players,  List<WinningStrategy> winningStrategy) throws Exception{
         return Game.getBuilder()
                 .setSize(boardSize)
                 .setPlayers(players)
-                .setPlayerWinningStrategy(playerWinningStrategy)
+                .setPlayerWinningStrategy(winningStrategy)
                 .build();
     }
     public void makeMove(Game game){

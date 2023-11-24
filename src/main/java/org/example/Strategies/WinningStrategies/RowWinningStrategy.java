@@ -7,7 +7,7 @@ import org.example.Models.Symbol;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RowWinningStrategy implements PlayerWinningStrategy{
+public class RowWinningStrategy implements WinningStrategy {
     private Map<Integer, Map<Symbol,Integer>> rowMaps = new HashMap<>();
     @Override
     public boolean checkWinner(Move move, Board board){

@@ -6,6 +6,23 @@ public class Bot extends Player{
     private BotDiffLevels botDiffLevels;
     private BotPlayingStrategies botPlayingStrategies;
 
+    public Bot(String name, Symbol symbol, PlayerType playerType, int id,BotDiffLevels botDiffLevels,BotPlayingStrategies botPlayingStrategies) {
+
+        super(name, symbol, playerType, id);
+        this.botDiffLevels = botDiffLevels;
+        this.botPlayingStrategies = botPlayingStrategies;
+
+    }
+    @Override
+    public Move makeMove(Board board){
+        // How Bot will make a move.
+        //Bot will make a move based on it's level(Easy,Medium,Hard).
+        Move move = botPlayingStrategies.makeMove(board);
+        move.setPlayer(this);
+        return move;
+    }
+    // --------------- Getters & Setters ---------------------
+
     public BotDiffLevels getBotDiffLevels() {
         return botDiffLevels;
     }
@@ -22,11 +39,4 @@ public class Bot extends Player{
         this.botPlayingStrategies = botPlayingStrategies;
     }
 
-    public Bot(String name, Symbol symbol, PlayerType playerType, Long id,BotDiffLevels botDiffLevels,BotPlayingStrategies botPlayingStrategies) {
-
-        super(name, symbol, playerType, id);
-        this.botDiffLevels = botDiffLevels;
-        this.botPlayingStrategies = botPlayingStrategies;
-
-    }
 }
