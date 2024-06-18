@@ -17,19 +17,31 @@ public class Board {
             }
         }
     }
-        public void displayBoard(){
-            for(int row = 0; row < size; row++) {
-                for(int col = 0; col < size; col++) {
-                    Cell cell = board.get(row).get(col);
-                    if(cell.getCellStatus().equals(CellStatus.EMPTY)){
-                        System.out.print("|  |");
-                    }else{
-                        System.out.print("|" + cell.getPlayer().getSymbol().getSymbol() + "|");
+    public void displayBoard() {
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                Cell cell = board.get(row).get(col);
+                if (cell.getCellStatus().equals(CellStatus.EMPTY)) {
+                    System.out.print("   ");
+                } else {
+                    System.out.print(" " + cell.getPlayer().getSymbol().getSymbol() + " ");
+                }
+                if (col < size - 1) {
+                    System.out.print("|");
+                }
+            }
+            System.out.println();
+            if (row < size - 1) {
+                for (int col = 0; col < size; col++) {
+                    System.out.print("---");
+                    if (col < size - 1) {
+                        System.out.print("+");
                     }
                 }
                 System.out.println();
             }
         }
+    }
     public int getSize() {
         return size;
     }
