@@ -114,6 +114,24 @@ public class Game {
         board.displayBoard();
     }
     public void undo(){
+        if(moves.size() == 0){
+            System.out.println("No moves to undo");
+            return;
+        }
+
+        Move lastMove = moves.get(moves.size()-1);
+
+        Cell cell = lastMove.getCell();
+        cell.setCellStatus(CellStatus.EMPTY);
+        cell.setPlayer(null);
+
+        moves.remove(moves.size()-1);
+
+        nextMovePlayerIndex -= 1;
+        nextMovePlayerIndex = (nextMovePlayerIndex + player.size()) % player.size();
+        nextMovePlayerIndex = (nextMovePlayerIndex + player.size()) % player.size();
+        gameStatus = GameStatus.IN_Progress;
+        winner = null;
 
     }
     public boolean validateMove(Move move){

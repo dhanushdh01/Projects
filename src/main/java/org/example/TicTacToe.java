@@ -77,8 +77,16 @@ public class TicTacToe {
             System.out.println("Current Board : ************");
             gameController.diaplayBoard(game);
 
+            //Undo the move
+            System.out.println("Want to undo the move? (Y/N)");
+            String undo = sc.next();
+            if (undo.equals("Y")) {
+                gameController.undo(game);
+            }
+
             //Make a move
             gameController.makeMove(game);
+
             //Check if game is over
             if (gameController.getGameStatus(game).equals(GameStatus.Ended)) {
                 //Display the board
